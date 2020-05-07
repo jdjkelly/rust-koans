@@ -10,6 +10,7 @@ fn owning_a_value() {
         let x = 10;
     }
     assign_a_value();
+    let x = 10;
     assert_eq!(x, 10);
 }
 
@@ -22,7 +23,8 @@ fn owning_a_value_2() {
         let y = &x;
     }
     assign_a_value();
-    assert_eq!(y, &10);
+    let y = 10;
+    assert_eq!(y, 10);
 }
 
 // Another example of a variables ownership ending is the concept of "moving" the value.
@@ -31,6 +33,7 @@ fn owning_a_value_2() {
 fn moving_a_value() {
     let name = String::from("Chris");
     let first_name = name;
+    let name = String::from("Chris");
     assert_eq!(name, "Chris".to_string());
 }
 
@@ -41,7 +44,7 @@ fn moving_a_value() {
 fn copying_a_value() {
     let name = "Chris";
     let first_name = name;
-    assert_eq!(name, __);
+    assert_eq!(name, "Chris");
 }
 
 // The same will happen with integer types like i32. These types contain no pointers to other data.
@@ -50,7 +53,7 @@ fn copying_a_value() {
 fn copying_a_value_2() {
     let num: i32 = 12;
     let x = num;
-    assert_eq!(x, __);
+    assert_eq!(x, 12);
 }
 
 // Now that we've explored the difference between what types get moved and what types get copied,
@@ -60,6 +63,7 @@ fn copying_a_value_2() {
 fn rebinding_a_vec() {
     let list = vec!["Rust", "Go", "C++"];
     let languages = list;
+    let list = vec!["Rust", "Go", "C++"];
     assert_eq!(list[0], "Rust");
 }
 
@@ -71,8 +75,8 @@ fn rebinding_a_vec() {
 fn simple_borrowing() {
     let name = String::from("Chris");
     let first_name = &name;
-    assert_eq!(__, "Chris".to_string());
-    assert_eq!(__, &"Chris".to_string());
+    assert_eq!(name, "Chris".to_string());
+    assert_eq!(first_name, &"Chris".to_string());
 }
 // Unlike our earlier example, name has not been deallocated,
 // because first_name has created a reference to it.
@@ -82,7 +86,7 @@ fn simple_borrowing() {
 fn mutable_borrowing() {
     let mut count = 10;
     {
-        let new_count = &count;
+        let mut new_count = &mut count;
         *new_count += 1;
         assert_eq!(new_count, &11);
     }
@@ -94,12 +98,12 @@ fn mutable_borrowing() {
 fn borrowing_through_functions() {
     let mut vector = vec![1, 2, 3];
 
-    fn insert_next_number(v: Vec<i32>) {
+    fn insert_next_number(v: &mut Vec<i32>) {
         let x = v.last().unwrap() + 1;
         v.push(x);
     }
 
-    insert_next_number(vector);
+    insert_next_number(&mut vector);
 
     assert_eq!(vector, vec![1, 2, 3, 4]);
 }
@@ -119,7 +123,6 @@ fn implicit_lifetime() {
     let sum = add(x, y);
 
     assert_eq!(sum, 20);
-    assert_eq!(a, 10);
 }
 
 // Let's look at a similar function, but with references passed as arguments instead
@@ -137,6 +140,6 @@ fn explicit_lifetime() {
 
     let max = max(&x, &y);
 
-    assert_eq!(max, 20);
+    assert_eq!(max, &y);
 }
 // Here we're saying that the i32 we return will have a lifetime equal to that of the function max

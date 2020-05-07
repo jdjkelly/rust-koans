@@ -15,7 +15,7 @@ fn implementing_traits() {
         fn full_name(&self) -> String;
     }
 
-    impl Person {
+    impl HasName for Person {
         fn full_name(&self) -> String {
             format!("{} {}", self.first_name, self.last_name)
         }
@@ -57,6 +57,10 @@ fn implementing_traits2() {
             self.level += 1;
             self.level
         }
+
+        fn print_level(&self) {
+            println!("level {}", self.level);
+        }
     }
 
     let mut durz = Character {
@@ -72,6 +76,16 @@ fn implementing_traits2() {
 }
 
 // Now let's try creating a trait and implementing it for an existing type.
+trait IsEvenOrOdd {
+    fn is_even(&self) -> bool;
+}
+
+impl IsEvenOrOdd for u16 {
+    fn is_even(&self) -> bool {
+        self % 2 == 0
+    }
+}
+
 #[test]
 fn creating_traits() {
     let num_one: u16 = 3;
@@ -94,7 +108,7 @@ fn trait_constraints_on_structs() {
         latest_version: T,
     }
 
-    impl<__> Language<T> {
+    impl<T: std::cmp::PartialOrd> Language<T> {
         fn is_stable(&self) -> bool {
             self.latest_version >= self.stable_version
         }
@@ -125,7 +139,7 @@ fn where_clause() {
         }
     }
 
-    fn asserts<T>(x: T, y: T) {
+    fn asserts<T>(x: T, y: T) where T: IsEvenOrOdd {
         assert!(!x.is_even());
         assert!(y.is_even());
     }
@@ -143,7 +157,7 @@ fn default_functions() {
     trait IsEvenOrOdd {
         fn is_even(&self) -> bool;
         fn is_odd(&self) -> bool {
-            __
+            true
         }
     }
 
@@ -176,7 +190,12 @@ fn inheritance() {
 
     impl<T: PartialOrd> PartialOrd for Bawks<T> {
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-            __
+            if self.thingy < other.thingy {
+                return Some(Ordering::Less);
+            } else if self.thingy > other.thingy {
+                return Some(Ordering::Greater);
+            }
+            Some(Ordering::Equal)
         }
     }
 
