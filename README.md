@@ -1,5 +1,7 @@
 # Rust Koans
 
+My solutions for Rust Koans. I'm pretty new to Rust, so there might be bad solutions. Original readme follows.
+
 ## The Structure
 
 The koans are broken out into areas by file, arrays are covered in arrays.rs, booleans are introduced in boolean.rs, etc. They are presented in order in the path_to_enlightenment.rs file.
